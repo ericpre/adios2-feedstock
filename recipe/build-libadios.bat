@@ -10,6 +10,13 @@ set CFLAGS=%CFLAGS% -DH5_BUILT_AS_DYNAMIC_LIB
 set CXXFLAGS=%CXXFLAGS% -DH5_BUILT_AS_DYNAMIC_LIB
 echo "%CXXFLAGS%"
 
+:: MPI variants
+if "%mpi%"=="nompi" (
+    set USE_MPI=OFF
+) else (
+    set USE_MPI=ON
+)
+
 cmake ^
     %CMAKE_ARGS%                ^
     -S %SRC_DIR%                ^
@@ -19,7 +26,7 @@ cmake ^
     -DCMAKE_VERBOSE_MAKEFILE=ON ^
     -DBUILD_SHARED_LIBS=ON      ^
     -DBUILD_TESTING=OFF         ^
-    -DADIOS2_USE_MPI=OFF        ^
+    -DADIOS2_USE_MPI=%USE_MPI%  ^
     -DADIOS2_BUILD_EXAMPLES=OFF ^
     -DADIOS2_Blosc2_PREFER_SHARED=ON  ^
     -DADIOS2_LIBADIOS_MODE=ON   ^
