@@ -18,6 +18,8 @@ source:
   sha256: ${{ sha256 }}
   patches:
     - patches/disable-bmpcp-py.patch
+    - if: win
+      then: patches/windows-hdf5-mpi-registration.patch
 
 build:
   number: ${{ build_number }}

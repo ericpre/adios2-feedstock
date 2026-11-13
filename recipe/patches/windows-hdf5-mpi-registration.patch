@@ -1,0 +1,33 @@
+--- a/source/adios2/toolkit/interop/hdf5/HDF5Common.cpp
++++ b/source/adios2/toolkit/interop/hdf5/HDF5Common.cpp
+@@ -27,6 +27,12 @@ namespace interop
+ std::mutex HDF5Common_MPI_API_Mutex;
+ HDF5Common::MPI_API const *HDF5Common_MPI_API;
+ 
++void SetHDF5Common_MPI_API(HDF5Common::MPI_API const *api)
++{
++    std::lock_guard<std::mutex> guard(HDF5Common_MPI_API_Mutex);
++    HDF5Common_MPI_API = api;
++}
++
+ namespace
+ {
+ 
+--- a/source/adios2/toolkit/interop/hdf5/HDF5CommonMPI.cpp
++++ b/source/adios2/toolkit/interop/hdf5/HDF5CommonMPI.cpp
+@@ -44,13 +44,11 @@ HDF5Common::MPI_API HDF5Common_MPI_API_Impl = {&init, &set_dxpl_mpio};
+ 
+ } // end anonymous namespace
+ 
+-extern std::mutex HDF5Common_MPI_API_Mutex;
+-extern HDF5Common::MPI_API const *HDF5Common_MPI_API;
++void SetHDF5Common_MPI_API(HDF5Common::MPI_API const *api);
+ 
+ void RegisterHDF5Common_MPI_API()
+ {
+-    std::lock_guard<std::mutex> guard(HDF5Common_MPI_API_Mutex);
+-    HDF5Common_MPI_API = &HDF5Common_MPI_API_Impl;
++    SetHDF5Common_MPI_API(&HDF5Common_MPI_API_Impl);
+ }
+ 
+ } // namespace interop
