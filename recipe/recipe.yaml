@@ -51,13 +51,19 @@ outputs:
             - numpy
             - if: mpi != "nompi"
               then:
-                - ${{ mpi }}
+                - if: win and mpi == 'impi'
+                  then: impi-devel
+                - if: not win
+                  then: ${{ mpi }}
       host:
         - python
         - numpy
         - if: mpi != "nompi"
           then:
-            - ${{ mpi }}
+            - if: win and mpi == 'impi'
+              then: impi-devel
+            - if: not win
+              then: ${{ mpi }}
             - mpi4py
         - libffi
         - hdf5
@@ -87,8 +93,6 @@ outputs:
       string: ${{ mpi_prefix }}_h${{ hash }}_${{ build_number }}
       skip:
         - if: python_impl == "pypy"
-          then: true
-        - if: win and mpi != 'nompi'
           then: true
         - if: is_abi3 and not is_python_min
           then: true
@@ -185,8 +189,6 @@ outputs:
       skip:
         - if: python_impl == "pypy"
           then: true
-        - if: win and mpi != 'nompi'
-          then: true
         - if: is_abi3 and not is_python_min
           then: true
       files:
@@ -218,7 +220,11 @@ outputs:
             - cross-python_${{ target_platform }}
             - numpy
             - if: mpi != "nompi"
-              then: ${{ mpi }}
+              then:
+                - if: win and mpi == 'impi'
+                  then: impi-devel
+                - if: not win
+                  then: ${{ mpi }}
       host:
         - if: is_abi3
           then: python-abi3
@@ -229,7 +235,10 @@ outputs:
         - numpy
         - if: mpi != "nompi"
           then:
-            - ${{ mpi }}
+            - if: win and mpi == 'impi'
+              then: impi_rt
+            - if: not win
+              then: ${{ mpi }}
             - mpi4py
       run_exports:
         # Downstream packages that host adios2 get adios2 (Python + tools) at runtime

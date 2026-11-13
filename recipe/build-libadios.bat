@@ -10,6 +10,9 @@ set CFLAGS=%CFLAGS% -DH5_BUILT_AS_DYNAMIC_LIB
 set CXXFLAGS=%CXXFLAGS% -DH5_BUILT_AS_DYNAMIC_LIB
 echo "%CXXFLAGS%"
 
+set ADIOS2_USE_MPI=OFF
+if /I "%mpi%"=="impi" set ADIOS2_USE_MPI=ON
+
 cmake ^
     %CMAKE_ARGS%                ^
     -S %SRC_DIR%                ^
@@ -19,7 +22,7 @@ cmake ^
     -DCMAKE_VERBOSE_MAKEFILE=ON ^
     -DBUILD_SHARED_LIBS=ON      ^
     -DBUILD_TESTING=OFF         ^
-    -DADIOS2_USE_MPI=OFF        ^
+    -DADIOS2_USE_MPI=%ADIOS2_USE_MPI% ^
     -DADIOS2_BUILD_EXAMPLES=OFF ^
     -DADIOS2_Blosc2_PREFER_SHARED=ON  ^
     -DADIOS2_USE_Blosc2=ON      ^
